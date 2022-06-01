@@ -1,0 +1,47 @@
+use khamSK;
+//tao bang thongBN
+create table thongtinBN (idBN int NOT NULL IDENTITY PRIMARY KEY,hoten nvarchar(20), gioitinh nvarchar(20),namsinh int, 
+cmnd nvarchar(50),ngaycap nvarchar(20),diachi nvarchar(50),lydo nvarchar(50));
+
+insert into thongtinBN values ('quy','nam',1998,198321771,'13/02/2022','TNPA','KSK');
+
+//tao bang thongtinkham
+create table thongtinkham (idPhieu int not null identity primary key, idBN int not null ,chieucao int, cannang int, bmi float , 
+mach int, huyetap nvarchar(10), pltl nvarchar(10), 
+plsk nvarchar(10),benhkhac nvarchar(50),nguoiKL nvarchar(50),ngaykham nvarchar(50), foreign key (idBN) references thongtinBN(idBN));
+
+//create bang xetnghiem
+create table xetnghiem(
+	IDXN int identity primary key,
+	idBN int,
+	morphin nvarchar(20),
+	amphe nvarchar(20),
+	metham nvarchar(20),
+	cansa nvarchar(20),
+	nongdocon nvarchar(20),
+	ketluan nvarchar(50),
+	nguoiKL nvarchar(50),
+	ngaykham nvarchar(20),
+	foreign key (idBN) references thongtinBN(idBN)
+)
+insert into thongtinkham values (1,168,63,22,80,80,120,'1','1','khong','quy');
+
+//them thong tin
+insert into thongtinBN (hoten, gioitinh, namsinh, cmnd, ngaycap, diachi, lydo) values (N'{0}',N'{1}',2,N'{3}',N'{4}',N'{5}',N'{6}') 
+insert into thongtinkham(idBN,chieucao,cannang,bmi,mach,huyetap,pltl,plsk,benhkhac,nguoiKL) 
+values ((select IDENT_CURRENT('thongtinBN') as idBN),7,8,9,10,11,N'{12}',N'{13}',N'{14}',N'{15}')
+
+//xem kq
+select right('0000' + convert(varchar(4),bn.idBN), 4) as IDBN ,p.idPhieu, bn.hoten,bn.gioitinh,bn.namsinh,bn.cmnd,bn.ngaycap,bn.diachi,bn.lydo,  
+                 p.chieucao,p.cannang,p.bmi,p.mach,p.huyetap,  
+                 p.pltl,p.plsk,p.benhkhac,p.nguoiKL,p.ngaykham   
+                 from thongtinBN bn left join thongtinkham p on bn.idBN = p.idBN   
+                 order by p.ngaykham desc; 
+
+//xemkqlx
+select right('0000' + convert(varchar(4),bn.idBN), 4) as IDBN ,xn.IDXN, bn.hoten,bn.gioitinh,bn.namsinh,bn.cmnd,bn.ngaycap,bn.diachi,bn.lydo,  
+                xn.morphin,xn.amphe,xn.metham,xn.cansa,xn.nongdocon,xn.ketluan,xn.nguoiKL,xn.ngaykham
+                 from thongtinBN bn left join xetnghiem xn on bn.idBN = xn.idBN  
+		where bn.idBN = xn.idbn 
+                 order by xn.ngaykham desc; 
+
